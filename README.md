@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MikroMile
 
-## Getting Started
+Micro-errands for college communities. Post where you're heading, pick up requests from your hostel, earn rewards.
 
-First, run the development server:
+## Quick Start
 
 ```bash
+cd app
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Demo Accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+No authentication needed — pick a demo account on the login page:
 
-## Learn More
+| Name           | Email            | Role                        |
+| -------------- | ---------------- | --------------------------- |
+| Aman Sharma    | aman@vjti.ac.in  | Helper (has an active trip) |
+| Priya Desai    | priya@vjti.ac.in | Requester                   |
+| Rohit Patil    | rohit@vjti.ac.in | Requester                   |
+| Sneha Kulkarni | sneha@vjti.ac.in | Requester                   |
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Next.js 16** (App Router) + TypeScript
+- **Tailwind CSS v4** + **shadcn/ui**
+- **localStorage** as temporary database (easily swappable to MongoDB)
+- **Zod** for validation (ready)
+- **Socket.io** (installed, wiring pending)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Pages
 
-## Deploy on Vercel
+| Page          | Route            | Description               |
+| ------------- | ---------------- | ------------------------- |
+| Landing       | `/`              | Hero + how-it-works + CTA |
+| Login         | `/login`         | Demo account picker       |
+| Dashboard     | `/dashboard`     | Community feed + stats    |
+| Create Trip   | `/trips/create`  | Post "going out" form     |
+| Trip Details  | `/trips/[id]`    | View trip + request items |
+| My Trips      | `/my-trips`      | Trips you created         |
+| My Requests   | `/my-requests`   | Items you requested       |
+| Notifications | `/notifications` | Real-time alerts          |
+| Leaderboard   | `/leaderboard`   | Community rankings        |
+| Profile       | `/profile`       | Your stats + rewards      |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copy `.env.example` to `.env.local` and fill in:
+
+```
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_key_here
+```
+
+## Future Enhancements
+
+- [ ] MongoDB/Mongoose integration
+- [ ] Firebase/Clerk authentication
+- [ ] Socket.io real-time push
+- [ ] Google Maps pin-drop for meeting points
+- [ ] Rating modal after delivery
+- [ ] Payment gateway integration
