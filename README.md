@@ -20,10 +20,10 @@ No authentication needed — pick a demo account on the login page:
 
 | Name           | Email            | Role                        |
 | -------------- | ---------------- | --------------------------- |
-| Aman Sharma    | aman@vjti.ac.in  | Helper + noodles group buy organizer |
-| Priya Desai    | priya@vjti.ac.in | Requester (can create new group buys) |
-| Rohit Patil    | rohit@vjti.ac.in | Requester                   |
-| Sneha Kulkarni | sneha@vjti.ac.in | Requester                   |
+| Tanish Bhamare | tanish@vjti.ac.in | Helper + noodles group buy organizer |
+| Gaurav Gaur    | gaurav@vjti.ac.in | Requester (can create new group buys) |
+| Daksh Gohil    | daksh@vjti.ac.in  | Requester                   |
+| Khushbu Chaudhari | khushbu@vjti.ac.in | Requester                |
 
 ## Tech Stack
 
@@ -67,8 +67,9 @@ convenience, never a dependency.
 
 ## Seeded Demo State
 
-- 🎉 **Maggi cases** deal — READY for pickup at "Hostel Gate A". Aman's active trip is attached as the errand bridge.
-- No OPEN or COMPLETED deals are pre-seeded — create your own via **Create Group Buy** (e.g. an OPEN deal to run the join-to-unlock flow, or a COMPLETED one to populate "Past Deals"). Existing browsers re-seed automatically (seed key `mikromile_seeded_v3`).
+- 🔓 **Diet Coke** deal — OPEN at 8/20 cans pledged by Tanish (₹60 → ₹50 @ 20 cans). Pledge 12 more and watch the meter unlock.
+- 🎉 **Maggi cases** deal — READY for pickup at "Hostel Gate A". Tanish's active trip is attached as the errand bridge.
+- No COMPLETED deals are pre-seeded — create your own via **Create Group Buy** (e.g. a COMPLETED one to populate "Past Deals"). Existing browsers re-seed automatically (seed key `mikromile_seeded_v5`).
 
 ## Environment Variables
 

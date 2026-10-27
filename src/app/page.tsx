@@ -471,7 +471,7 @@ export default function LandingPage() {
                             <Reveal delay={240}>
                                 <p className="max-w-[560px] text-[19px] leading-[1.75] tracking-[-0.16px] text-[rgba(255,255,255,0.7)]">
                                     40 students pledge notebooks. Sharma Book Depot prepares one consolidated
-                                    order. Aman is already going that way — so he brings the whole thing to the
+                                    order. Tanish is already going that way — so he brings the whole thing to the
                                     hostel gate. No store delivering 40 separate parcels, no extra trips.
                                 </p>
                             </Reveal>
@@ -515,7 +515,7 @@ export default function LandingPage() {
                             </div>
                             <div className="mt-4 border-t border-[#e7e7e7] pt-4">
                                 <p className="text-[13px] leading-[1.5] tracking-[-0.01em] text-[rgba(0,0,0,0.58)]">
-                                    Aman&apos;s trip is carrying it —{" "}
+                                    Tanish&apos;s trip is carrying it —{" "}
                                     <span className="font-semibold text-[#00754A]">no delivery fee</span>{" "}
                                     charged, and the order was never split into 40 parcels.
                                 </p>

@@ -88,9 +88,9 @@ prices from local stores — while running the errands pillar on the same shared
 4. **Explicit confirm is preferred over silent auto-confirm for the organizer demo path** — auto-confirm only
    fires on deadline pass; the coordinator panel's confirm button is the visible "MikroMile coordinates" step.
 5. **Completeer rewards** — organizer gets +2 points/unit on full distribution (leaderboard integration).
-6. **Seed demo state** (`seed.ts`, key v3): only the noodles deal is seeded (status READY, with Aman's
-   active trip attached — errand-bridge demo). Deliberately no open/completed deals: run the join-to-unlock
-   and past-deals demos by creating your own open/completed deals via `/group-buy/create`.
+6. **Seed demo state** (`seed.ts`, key v5): an OPEN Diet Coke deal (8/20, Tanish's opening pledge — join-to-unlock
+   demo) and a READY noodles deal with Tanish's active trip attached (errand-bridge demo). No completed deal
+   is seeded: demo the savings/history section by driving a deal through the lifecycle live.
 7. **Design**: UI must migrate toward `DESIGN.md` (Starbucks-inspired system) when pages are touched —
    see the authoritative-design section in `AGENTS.md`.
 
@@ -98,12 +98,12 @@ prices from local stores — while running the errands pillar on the same shared
 
 1. Landing page → "Community Commerce & Convenience" positioning.
 2. Login as any seeded account (no auth). Dashboard shows Group Buys + Trips side by side.
-3. **Join flow**: as Aman, create an OPEN deal via "Create Group Buy" (e.g. ₹60 → ₹45, min 50, pick Sharma
+3. **Join flow**: as Tanish, create an OPEN deal via "Create Group Buy" (e.g. ₹60 → ₹45, min 50, pick Sharma
     Book Depot) → pledge ~50 as a second account → meter unlocks → as the organizer, "Confirm Order with
     Store" (pledges → Paid, participants notified).
 4. **Ready + collect flow**: as organizer, "Mark Ready for Pickup" with a time → participants get notified →
    "I've Collected It" → last collector completes the deal → organizer earns +2/unit (check Profile rewards).
-5. **Errand bridge**: Aman's seeded trip carries the noodles order (chip on TripCard, trip listed on the deal
+5. **Errand bridge**: Tanish's seeded trip carries the noodles order (chip on TripCard, trip listed on the deal
    page). Show the deal still works with no trip (TC-41) — the independence story.
 6. **Refund path (optional)**: create a deal with min 500, let the deadline pass → auto-cancel + refunds +
    cancellation notifications.

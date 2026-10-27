@@ -6,13 +6,13 @@
 import { User, Community, Trip, ItemRequest, Notification, Store, GroupBuy, Participation } from "@/types";
 import { getAll, create, Collections, clearAll } from "@/lib/db";
 
-const SEED_KEY = "mikromile_seeded_v3";
+const SEED_KEY = "mikromile_seeded_v5";
 
 export const DUMMY_USERS: User[] = [
   {
     id: "user-aman",
-    name: "Aman Sharma",
-    email: "aman@vjti.ac.in",
+    name: "Tanish Bhamare",
+    email: "tanish@vjti.ac.in",
     profilePhoto: "",
     phoneNumber: "9876543210",
     college: "VJTI Mumbai",
@@ -24,8 +24,8 @@ export const DUMMY_USERS: User[] = [
   },
   {
     id: "user-priya",
-    name: "Priya Desai",
-    email: "priya@vjti.ac.in",
+    name: "Gaurav Gaur",
+    email: "gaurav@vjti.ac.in",
     profilePhoto: "",
     phoneNumber: "9876543211",
     college: "VJTI Mumbai",
@@ -37,8 +37,8 @@ export const DUMMY_USERS: User[] = [
   },
   {
     id: "user-rohit",
-    name: "Rohit Patil",
-    email: "rohit@vjti.ac.in",
+    name: "Daksh Gohil",
+    email: "daksh@vjti.ac.in",
     profilePhoto: "",
     phoneNumber: "9876543212",
     college: "VJTI Mumbai",
@@ -50,8 +50,8 @@ export const DUMMY_USERS: User[] = [
   },
   {
     id: "user-sneha",
-    name: "Sneha Kulkarni",
-    email: "sneha@vjti.ac.in",
+    name: "Khushbu Chaudhari",
+    email: "khushbu@vjti.ac.in",
     profilePhoto: "",
     phoneNumber: "9876543213",
     college: "VJTI Mumbai",
@@ -136,7 +136,7 @@ export const DUMMY_NOTIFICATIONS: Notification[] = [
     id: "notif-1",
     userId: "user-priya",
     title: "New Trip Posted",
-    message: "Aman Sharma is going to Sai Kirana & General Stores in Matunga.",
+    message: "Tanish Bhamare is going to Sai Kirana & General Stores in Matunga.",
     type: "trip_posted",
     read: false,
     relatedTripId: "trip-1",
@@ -146,7 +146,7 @@ export const DUMMY_NOTIFICATIONS: Notification[] = [
     id: "notif-2",
     userId: "user-rohit",
     title: "New Trip Posted",
-    message: "Aman Sharma is going to Sai Kirana & General Stores in Matunga.",
+    message: "Tanish Bhamare is going to Sai Kirana & General Stores in Matunga.",
     type: "trip_posted",
     read: false,
     relatedTripId: "trip-1",
@@ -156,7 +156,7 @@ export const DUMMY_NOTIFICATIONS: Notification[] = [
     id: "notif-3",
     userId: "user-sneha",
     title: "New Trip Posted",
-    message: "Aman Sharma is going to Sai Kirana & General Stores in Matunga.",
+    message: "Tanish Bhamare is going to Sai Kirana & General Stores in Matunga.",
     type: "trip_posted",
     read: false,
     relatedTripId: "trip-1",
@@ -195,10 +195,10 @@ export const DUMMY_STORES: Store[] = [
 ];
 
 /**
- * One seeded group buy demonstrating the READY state (collect flow).
- * Open and past deals are intentionally left out — create your own via
- * /group-buy/create when demoing (e.g. an OPEN deal for the join-to-unlock
- * flow, or a COMPLETED deal for the savings/history section).
+ * Two seeded group buys demonstrating the lifecycle:
+ * an OPEN deal (Diet Coke 8/20 — join to unlock) and a READY one (collect).
+ * No completed deal is seeded — create your own via /group-buy/create
+ * when demoing the savings/history section.
  */
 export const DUMMY_GROUP_BUYS: GroupBuy[] = [
   {
@@ -221,9 +221,27 @@ export const DUMMY_GROUP_BUYS: GroupBuy[] = [
     confirmedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     readyAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
   },
+  {
+    id: "gb-dietcoke",
+    communityId: "community-vjti",
+    organizerId: "user-aman",
+    storeId: "store-kirana",
+    productName: "Diet Coke",
+    unit: "can",
+    description: "Chilled individual cans at the bulk rate. Deal unlocks at 20 cans — Sai Kirana supplies the whole case.",
+    individualPrice: 60,
+    dealPrice: 50,
+    minQuantity: 20,
+    deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+    pickupLocation: "VJTI Main Gate",
+    status: "open",
+    createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+  },
 ];
 
 export const DUMMY_PARTICIPATIONS: Participation[] = [
+  // gb-dietcoke — open, Tanish's opening pledge (needs 12 more to unlock 20)
+  { id: "part-dc-1", groupBuyId: "gb-dietcoke", userId: "user-aman", quantity: 8, status: "pledged", createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString() },
   // gb-noodles — ready for pickup, payments simulated as paid
   { id: "part-nd-1", groupBuyId: "gb-noodles", userId: "user-aman", quantity: 12, status: "paid", createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() },
   { id: "part-nd-2", groupBuyId: "gb-noodles", userId: "user-priya", quantity: 10, status: "paid", createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() },
