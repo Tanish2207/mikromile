@@ -100,4 +100,7 @@ export const Collections = {
   REVIEWS: "reviews",
   REWARDS: "rewards",
   NOTIFICATIONS: "notifications",
+  STORES: "stores",
+  GROUP_BUYS: "group_buys",
+  PARTICIPATIONS: "participations",
 } as const;

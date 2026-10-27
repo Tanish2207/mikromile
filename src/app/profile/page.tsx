@@ -41,7 +41,7 @@ export default function ProfilePage() {
             <main className="max-w-3xl mx-auto px-4 py-8 space-y-6">
                 {/* Profile Header */}
                 <Card className="overflow-hidden border-border/50 shadow-lg">
-                    <div className="h-24 gradient-primary relative">
+                    <div className="h-24 bg-[#1E3932] relative">
                         <div className="absolute -bottom-10 left-6">
                             <Avatar className="h-20 w-20 border-4 border-background shadow-lg">
                                 <AvatarFallback className="gradient-primary text-white text-2xl font-bold">

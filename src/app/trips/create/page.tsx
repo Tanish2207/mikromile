@@ -9,12 +9,33 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { create, getByField, Collections } from '@/lib/db';
-import { Trip, User } from '@/types';
-import { MapPin, Clock, ArrowLeft, Sparkles } from 'lucide-react';
+import { Trip, User, GroupBuy } from '@/types';
+import { MapPin, Clock, ArrowLeft, Sparkles, Boxes } from 'lucide-react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
+
+// Leaflet/OpenStreetMap map (no Google API key needed). ssr:false is required —
+// react-leaflet touches `window` on import.
+const TripMap = dynamic(() => import('@/components/TripMap'), {
+    ssr: false,
+    loading: () => (
+        <div className="h-[320px] w-full rounded-[12px] bg-secondary animate-pulse" />
+    ),
+});
+
+// VJTI campus — the default pin the user can drag anywhere.
+const DEFAULT_LAT = 19.0278;
+const DEFAULT_LNG = 72.8558;
 
 export default function CreateTripPage() {
     const { currentUser, isLoggedIn } = useAuth();
@@ -26,6 +47,10 @@ export default function CreateTripPage() {
     const [note, setNote] = useState('');
     const [expectedReturnTime, setExpectedReturnTime] = useState('');
     const [address, setAddress] = useState('');
+    const [pinLat, setPinLat] = useState(DEFAULT_LAT);
+    const [pinLng, setPinLng] = useState(DEFAULT_LNG);
+    const [groupBuyChoice, setGroupBuyChoice] = useState('none');
+    const [groupBuys, setGroupBuys] = useState<GroupBuy[]>([]);
 
     useEffect(() => {
         setMounted(true);
@@ -33,7 +58,16 @@ export default function CreateTripPage() {
 
     useEffect(() => {
         if (mounted && !isLoggedIn) router.push('/login');
-    }, [mounted, isLoggedIn, router]);
+        if (mounted && currentUser) {
+            // Confirmed/ready orders are the ones a trip can actually collect.
+            const list = getByField<GroupBuy>(
+                Collections.GROUP_BUYS,
+                'communityId',
+                currentUser.communityId,
+            ).filter((g) => g.status === 'confirmed' || g.status === 'ready');
+            setGroupBuys(list);
+        }
+    }, [mounted, isLoggedIn, router, currentUser]);
 
     if (!mounted || !currentUser) return null;
 
@@ -54,11 +88,12 @@ export default function CreateTripPage() {
             note: note || undefined,
             expectedReturnTime: new Date(expectedReturnTime).toISOString(),
             shopLocation: {
-                lat: 19.0278 + (Math.random() - 0.5) * 0.01,
-                lng: 72.8558 + (Math.random() - 0.5) * 0.01,
+                lat: pinLat,
+                lng: pinLng,
                 address: address || `${destinationShop}, ${destinationArea}`,
             },
             status: 'active',
+            groupBuyId: groupBuyChoice !== 'none' ? groupBuyChoice : undefined,
             createdAt: new Date().toISOString(),
         };
 
@@ -167,12 +202,51 @@ export default function CreateTripPage() {
                                 />
                             </div>
 
-                            {/* Map Placeholder */}
-                            <div className="rounded-xl border-2 border-dashed border-border bg-muted/30 p-8 text-center">
-                                <MapPin className="w-8 h-8 text-muted-foreground/50 mx-auto mb-2" />
-                                <p className="text-sm text-muted-foreground font-medium">Google Maps Integration</p>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    Add your Google Maps API key in <code className="bg-muted px-1 rounded">.env.local</code> to enable location picker
+                            {/* Optional group buy link */}
+                            {groupBuys.length > 0 && (
+                                <div className="space-y-2 rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4">
+                                    <Label className="flex items-center gap-1.5">
+                                        <Boxes className="w-4 h-4 text-primary" />
+                                        Carrying a MikroMile Group Order? (optional)
+                                    </Label>
+                                    <Select value={groupBuyChoice} onValueChange={(v) => setGroupBuyChoice(v ?? 'none')}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Not carrying one" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">No — regular errand</SelectItem>
+                                            {groupBuys.map((g) => (
+                                                <SelectItem key={g.id} value={g.id}>
+                                                    {g.productName} ({g.status === 'ready' ? 'ready for pickup' : 'order confirmed'})
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-[11px] text-muted-foreground">
+                                        Participants of that deal will see your trip on its page. The deal
+                                        completes even with no helper — this is purely a hand up.
+                                    </p>
+                                </div>
+                            )}
+
+                            {/* Location picker — OpenStreetMap */}
+                            <div className="space-y-2">
+                                <Label className="flex items-center gap-1.5">
+                                    <MapPin className="w-4 h-4 text-primary" />
+                                    Shop Location (search, tap the map or drag the pin)
+                                </Label>
+                                <TripMap
+                                    lat={pinLat}
+                                    lng={pinLng}
+                                    address={address || (destinationShop ? `${destinationShop}, ${destinationArea}` : undefined)}
+                                    onPick={(lat, lng) => {
+                                        setPinLat(lat);
+                                        setPinLng(lng);
+                                    }}
+                                />
+                                <p className="text-[11px] text-muted-foreground">
+                                    Pinned at {pinLat.toFixed(4)}, {pinLng.toFixed(4)} · community members see
+                                    this pin on the trip page. Map data &copy; OpenStreetMap contributors.
                                 </p>
                             </div>
 

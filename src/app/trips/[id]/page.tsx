@@ -34,8 +34,18 @@ import {
     IndianRupee,
 } from 'lucide-react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { toast } from 'sonner';
 import { v4 as uuid } from 'uuid';
+
+// Leaflet/OpenStreetMap map (no Google API key needed). ssr:false is required —
+// react-leaflet touches `window` on import.
+const TripMap = dynamic(() => import('@/components/TripMap'), {
+    ssr: false,
+    loading: () => (
+        <div className="h-[320px] w-full rounded-[12px] bg-secondary animate-pulse" />
+    ),
+});
 
 export default function TripDetailsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
@@ -281,14 +291,15 @@ export default function TripDetailsPage({ params }: { params: Promise<{ id: stri
                             </div>
                         )}
 
-                        {/* Map Placeholder */}
-                        <div className="mt-4 rounded-xl border-2 border-dashed border-border bg-muted/20 p-6 text-center">
-                            <MapPin className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
-                            <p className="text-sm text-muted-foreground">
-                                {trip.shopLocation.address}
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                Map view available with Google Maps API key
+                        {/* Location map — OpenStreetMap pin at the shop */}
+                        <div className="mt-4 space-y-2">
+                            <TripMap
+                                lat={trip.shopLocation.lat}
+                                lng={trip.shopLocation.lng}
+                                address={trip.shopLocation.address}
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                {trip.shopLocation.address} · Map data &copy; OpenStreetMap contributors
                             </p>
                         </div>
                     </CardContent>
@@ -326,7 +337,7 @@ export default function TripDetailsPage({ params }: { params: Promise<{ id: stri
                                             <div className="mt-2 ml-12 flex gap-2">
                                                 <Button
                                                     size="sm"
-                                                    className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+                                                    className="gap-1.5 bg-[#00754A] hover:bg-[#006241] text-white"
                                                     onClick={() => handleMarkDelivered(req.id)}
                                                 >
                                                     <CheckCircle2 className="w-3.5 h-3.5" />

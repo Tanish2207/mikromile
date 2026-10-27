@@ -32,7 +32,7 @@ export default function LoginPage() {
                             <MapPin className="w-6 h-6 text-white" />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold">Welcome to MikroMile</h1>
+                    <h1 className="text-[28px] sm:text-[32px] font-semibold tracking-[-0.01em] text-[#006241]">Welcome to MikroMile</h1>
                     <p className="text-muted-foreground">Choose an account to continue</p>
                 </div>
 

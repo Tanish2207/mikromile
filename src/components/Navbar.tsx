@@ -23,6 +23,7 @@ import {
     X,
     Package,
     Route,
+    Boxes,
 } from 'lucide-react';
 import { getByField, Collections } from '@/lib/db';
 import { Notification } from '@/types';
@@ -45,51 +46,38 @@ export default function Navbar() {
         .toUpperCase();
 
     return (
-        <nav className="sticky top-0 z-50 glass border-b border-border/50">
+        <nav className="sticky top-0 z-50 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.1),0_2px_2px_rgba(0,0,0,0.06),0_0_2px_rgba(0,0,0,0.07)]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <Link href="/dashboard" className="flex items-center gap-2 group">
-                        <div className="w-9 h-9 rounded-xl gradient-primary flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                            <MapPin className="w-5 h-5 text-white" />
+                        <div className="w-9 h-9 rounded-full bg-[#006241] flex items-center justify-center group-hover:scale-105 transition-transform">
+                            <MapPin className="w-4.5 h-4.5 text-white" />
                         </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-[oklch(0.55_0.18_155)] to-[oklch(0.6_0.15_240)] bg-clip-text text-transparent">
+                        <span className="text-xl font-semibold tracking-[-0.01em] text-[#006241]">
                             MikroMile
                         </span>
                     </Link>
 
                     {/* Desktop Nav Links */}
-                    <div className="hidden md:flex items-center gap-1">
-                        <Link href="/dashboard">
-                            <Button variant="ghost" size="sm" className="gap-2">
-                                <Package className="w-4 h-4" />
-                                Dashboard
-                            </Button>
-                        </Link>
-                        <Link href="/trips/create">
-                            <Button variant="ghost" size="sm" className="gap-2">
-                                <Route className="w-4 h-4" />
-                                Post Trip
-                            </Button>
-                        </Link>
-                        <Link href="/my-trips">
-                            <Button variant="ghost" size="sm" className="gap-2">
-                                <MapPin className="w-4 h-4" />
-                                My Trips
-                            </Button>
-                        </Link>
-                        <Link href="/my-requests">
-                            <Button variant="ghost" size="sm" className="gap-2">
-                                <Package className="w-4 h-4" />
-                                My Requests
-                            </Button>
-                        </Link>
-                        <Link href="/leaderboard">
-                            <Button variant="ghost" size="sm" className="gap-2">
-                                <Trophy className="w-4 h-4" />
-                                Leaderboard
-                            </Button>
-                        </Link>
+                    <div className="hidden md:flex items-center gap-5">
+                        {[
+                            { href: '/dashboard', label: 'Dashboard', icon: Package },
+                            { href: '/trips/create', label: 'Post Trip', icon: Route },
+                            { href: '/group-buy', label: 'Group Buy', icon: Boxes },
+                            { href: '/my-trips', label: 'My Trips', icon: MapPin },
+                            { href: '/my-requests', label: 'My Requests', icon: Package },
+                            { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+                        ].map((l) => (
+                            <Link
+                                key={l.href}
+                                href={l.href}
+                                className="nav-underline flex items-center gap-1.5 text-[14px] font-medium tracking-[-0.01em] text-[rgba(0,0,0,0.87)] hover:text-[#006241] transition-colors"
+                            >
+                                <l.icon className="w-4 h-4" />
+                                {l.label}
+                            </Link>
+                        ))}
                     </div>
 
                     {/* Right side */}
@@ -99,7 +87,7 @@ export default function Navbar() {
                             <Button variant="ghost" size="icon" className="relative">
                                 <Bell className="w-5 h-5" />
                                 {unreadCount > 0 && (
-                                    <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-[10px] gradient-primary text-white border-0">
+                                    <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-[10px] bg-[#00754A] text-white border-0 rounded-full">
                                         {unreadCount}
                                     </Badge>
                                 )}
@@ -110,7 +98,7 @@ export default function Navbar() {
                         <DropdownMenu>
                             <DropdownMenuTrigger className="relative h-9 w-9 rounded-full outline-none ring-0 focus:ring-0 hover:bg-accent transition-colors flex items-center justify-center">
                                 <Avatar className="h-9 w-9 border-2 border-primary/20">
-                                    <AvatarFallback className="text-sm font-semibold gradient-primary text-white">
+                                    <AvatarFallback className="text-sm font-semibold bg-[#006241] text-white">
                                         {initials}
                                     </AvatarFallback>
                                 </Avatar>
@@ -118,7 +106,7 @@ export default function Navbar() {
                             <DropdownMenuContent className="w-56" align="end">
                                 <div className="flex items-center gap-3 p-3">
                                     <Avatar className="h-10 w-10">
-                                        <AvatarFallback className="gradient-primary text-white text-sm">
+                                        <AvatarFallback className="bg-[#006241] text-white text-sm">
                                             {initials}
                                         </AvatarFallback>
                                     </Avatar>
@@ -162,32 +150,24 @@ export default function Navbar() {
 
                 {/* Mobile Nav */}
                 {mobileMenuOpen && (
-                    <div className="md:hidden pb-4 border-t border-border/50 mt-2 pt-3 space-y-1">
-                        <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                            <Button variant="ghost" className="w-full justify-start gap-2">
-                                <Package className="w-4 h-4" /> Dashboard
-                            </Button>
-                        </Link>
-                        <Link href="/trips/create" onClick={() => setMobileMenuOpen(false)}>
-                            <Button variant="ghost" className="w-full justify-start gap-2">
-                                <Route className="w-4 h-4" /> Post Trip
-                            </Button>
-                        </Link>
-                        <Link href="/my-trips" onClick={() => setMobileMenuOpen(false)}>
-                            <Button variant="ghost" className="w-full justify-start gap-2">
-                                <MapPin className="w-4 h-4" /> My Trips
-                            </Button>
-                        </Link>
-                        <Link href="/my-requests" onClick={() => setMobileMenuOpen(false)}>
-                            <Button variant="ghost" className="w-full justify-start gap-2">
-                                <Package className="w-4 h-4" /> My Requests
-                            </Button>
-                        </Link>
-                        <Link href="/leaderboard" onClick={() => setMobileMenuOpen(false)}>
-                            <Button variant="ghost" className="w-full justify-start gap-2">
-                                <Trophy className="w-4 h-4" /> Leaderboard
-                            </Button>
-                        </Link>
+                    <div className="md:hidden pb-4 border-t border-[rgba(0,0,0,0.06)] mt-2 pt-3 space-y-1">
+                        {[
+                            { href: '/dashboard', label: 'Dashboard', icon: Package },
+                            { href: '/trips/create', label: 'Post Trip', icon: Route },
+                            { href: '/group-buy', label: 'Group Buy', icon: Boxes },
+                            { href: '/my-trips', label: 'My Trips', icon: MapPin },
+                            { href: '/my-requests', label: 'My Requests', icon: Package },
+                            { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+                        ].map((l) => (
+                            <Link
+                                key={l.href}
+                                href={l.href}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="flex items-center gap-2 rounded-[12px] px-3 py-2 text-[16px] tracking-[-0.01em] text-[rgba(0,0,0,0.87)] hover:bg-[#f9f9f9]"
+                            >
+                                <l.icon className="w-4 h-4" /> {l.label}
+                            </Link>
+                        ))}
                     </div>
                 )}
             </div>

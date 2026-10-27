@@ -18,12 +18,25 @@ export type TransactionStatus =
   | "held_in_escrow"
   | "released"
   | "refunded";
+export type GroupBuyStatus =
+  | "open"
+  | "confirmed"
+  | "ready"
+  | "completed"
+  | "cancelled";
+export type ParticipationStatus =
+  | "pledged"
+  | "paid"
+  | "collected"
+  | "refunded";
 export type NotificationType =
   | "trip_posted"
   | "request_accepted"
   | "request_rejected"
   | "meeting_point"
-  | "delivery_complete";
+  | "delivery_complete"
+  | "group_buy_new"
+  | "group_buy_update";
 
 // ---------- Models ----------
 
@@ -51,6 +64,14 @@ export interface Community {
   createdAt: string;
 }
 
+export interface Store {
+  id: string;
+  name: string;
+  category: string; // Stationery | Grocery | Pharmacy | General ...
+  address: string;
+  createdAt: string;
+}
+
 export interface Trip {
   id: string;
   helperId: string;
@@ -65,6 +86,9 @@ export interface Trip {
     address: string;
   };
   status: TripStatus;
+  /** Optional link to a Group Buy the helper is helping collect. Purely
+   *  informational — a group buy never depends on any trip. */
+  groupBuyId?: string;
   createdAt: string;
 }
 
@@ -129,5 +153,57 @@ export interface Notification {
   read: boolean;
   relatedTripId?: string;
   relatedRequestId?: string;
+  relatedGroupBuyId?: string;
+  createdAt: string;
+}
+
+// ---------- Group Buy (Community Commerce) ----------
+
+/**
+ * A group buy ("pooled order") placed with a local store.
+ * Lifecycle: open → confirmed → ready → completed, or cancelled.
+ * It is deliberately independent of the Community Errands flow:
+ * participants always pick up the consolidated order themselves at a
+ * community pickup point. A helpful trip CAN carry it (see Trip.groupBuyId),
+ * but it is never required for the group buy to complete.
+ */
+export interface GroupBuy {
+  id: string;
+  communityId: string;
+  /** Community member coordinating this deal (MikroMile coordinator role). */
+  organizerId: string;
+  storeId: string;
+  productName: string;
+  unit?: string; // e.g. "notebook", "pack", "1L carton"
+  description?: string;
+  /** Store's counter price when buying one at a time. */
+  individualPrice: number;
+  /** Bulk price unlocked once minQuantity is pledged. */
+  dealPrice: number;
+  /** Pledged quantity needed to unlock the deal. */
+  minQuantity: number;
+  /** Optional cap on total quantity. */
+  maxQuantity?: number;
+  deadline: string; // ISO — pledges close at this time
+  /** Where participants collect the consolidated order. */
+  pickupLocation: string;
+  /** Set when the store is marked ready. */
+  pickupTime?: string;
+  status: GroupBuyStatus;
+  createdAt: string;
+  confirmedAt?: string;
+  readyAt?: string;
+  completedAt?: string;
+  cancelledAt?: string;
+}
+
+/** One student's stake in a group buy. Payment is simulated as escrow:
+ *  pledged → paid (on confirm) → collected (at pickup), refunded on cancel. */
+export interface Participation {
+  id: string;
+  groupBuyId: string;
+  userId: string;
+  quantity: number;
+  status: ParticipationStatus;
   createdAt: string;
 }

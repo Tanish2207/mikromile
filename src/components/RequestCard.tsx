@@ -64,7 +64,7 @@ export default function RequestCard({ request, showActions, onAccept, onReject }
                                 <Button
                                     size="icon"
                                     variant="outline"
-                                    className="h-8 w-8 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-colors"
+                                    className="h-8 w-8 hover:bg-[#00754A] hover:text-white hover:border-[#00754A] transition-colors"
                                     onClick={() => onAccept?.(request.id)}
                                 >
                                     <Check className="w-4 h-4" />

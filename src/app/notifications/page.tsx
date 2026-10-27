@@ -8,15 +8,17 @@ import { Notification } from '@/types';
 import { getByField, update, Collections } from '@/lib/db';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bell, Check, CheckCheck, MapPin, Package, Star, Trash2 } from 'lucide-react';
+import { Bell, Check, CheckCheck, MapPin, Package, Star, Trash2, Boxes } from 'lucide-react';
 import Link from 'next/link';
 
 const iconMap: Record<string, React.ReactNode> = {
     trip_posted: <MapPin className="w-5 h-5 text-primary" />,
-    request_accepted: <Check className="w-5 h-5 text-emerald-500" />,
+    request_accepted: <Check className="w-5 h-5 text-[#00754A]" />,
     request_rejected: <Trash2 className="w-5 h-5 text-red-500" />,
     meeting_point: <MapPin className="w-5 h-5 text-blue-500" />,
     delivery_complete: <Star className="w-5 h-5 text-amber-500" />,
+    group_buy_new: <Boxes className="w-5 h-5 text-orange-500" />,
+    group_buy_update: <Boxes className="w-5 h-5 text-violet-500" />,
 };
 
 export default function NotificationsPage() {
@@ -80,7 +82,7 @@ export default function NotificationsPage() {
                             <Bell className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
                             <p className="text-muted-foreground font-medium">No notifications yet</p>
                             <p className="text-sm text-muted-foreground mt-1">
-                                You&apos;ll get notified when someone in your community posts a trip.
+                                You&apos;ll get notified about trips and group buys from your community.
                             </p>
                         </CardContent>
                     </Card>
@@ -121,6 +123,16 @@ export default function NotificationsPage() {
                                         {notif.relatedTripId && (
                                             <Link
                                                 href={`/trips/${notif.relatedTripId}`}
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <Button variant="ghost" size="sm" className="shrink-0 text-xs text-primary">
+                                                    View
+                                                </Button>
+                                            </Link>
+                                        )}
+                                        {!notif.relatedTripId && notif.relatedGroupBuyId && (
+                                            <Link
+                                                href={`/group-buy/${notif.relatedGroupBuyId}`}
                                                 onClick={(e) => e.stopPropagation()}
                                             >
                                                 <Button variant="ghost" size="sm" className="shrink-0 text-xs text-primary">

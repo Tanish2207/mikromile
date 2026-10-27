@@ -6,10 +6,10 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/StatusBadge';
-import { Trip, User } from '@/types';
+import { Trip, User, GroupBuy } from '@/types';
 import { getById, getByField, Collections } from '@/lib/db';
 import { ItemRequest } from '@/types';
-import { MapPin, Clock, Package, ArrowRight } from 'lucide-react';
+import { MapPin, Clock, Package, ArrowRight, Boxes } from 'lucide-react';
 
 interface TripCardProps {
     trip: Trip;
@@ -33,19 +33,21 @@ export default function TripCard({ trip }: TripCardProps) {
         <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50 overflow-hidden">
             <div className="h-1 gradient-primary" />
             <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border-2 border-primary/20">
+                <div className="flex items-center justify-between gap-2 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <Avatar className="h-10 w-10 border-2 border-primary/20 shrink-0">
                             <AvatarFallback className="gradient-primary text-white text-sm font-semibold">
                                 {initials}
                             </AvatarFallback>
                         </Avatar>
-                        <div>
-                            <p className="font-semibold text-sm">{helper?.name || 'Unknown'}</p>
-                            <p className="text-xs text-muted-foreground">⭐ {helper?.averageRating?.toFixed(1) || 'N/A'}</p>
+                        <div className="min-w-0">
+                            <p className="font-semibold text-sm truncate">{helper?.name || 'Unknown'}</p>
+                            <p className="text-xs text-muted-foreground truncate">⭐ {helper?.averageRating?.toFixed(1) || 'N/A'}</p>
                         </div>
                     </div>
-                    <StatusBadge status={trip.status} />
+                    <div className="shrink-0">
+                        <StatusBadge status={trip.status} />
+                    </div>
                 </div>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -67,6 +69,7 @@ export default function TripCard({ trip }: TripCardProps) {
                             {requests.length} request{requests.length !== 1 ? 's' : ''} · {acceptedCount} accepted
                         </p>
                     </div>
+                    {trip.groupBuyId && <GroupOrderChip groupBuyId={trip.groupBuyId} />}
                 </div>
 
                 {trip.note && (
@@ -83,5 +86,21 @@ export default function TripCard({ trip }: TripCardProps) {
                 </Link>
             </CardContent>
         </Card>
+    );
+}
+
+/** Small chip shown when a trip is helping carry a consolidated group order. */
+function GroupOrderChip({ groupBuyId }: { groupBuyId: string }) {
+    const gb = getById<GroupBuy>(Collections.GROUP_BUYS, groupBuyId);
+    if (!gb) return null;
+    return (
+        <Link href={`/group-buy/${gb.id}`} className="block w-full">
+            <span className="flex items-center gap-1.5 w-full rounded-lg bg-[#d4e9e2] border border-[#00754A]/30 px-2.5 py-1.5 hover:bg-[#d4e9e2]/70 transition-colors">
+                <Boxes className="w-3.5 h-3.5 text-[#00754A] shrink-0" />
+                <span className="text-xs font-medium text-[#006241] truncate">
+                    Carrying group order: {gb.productName}
+                </span>
+            </span>
+        </Link>
     );
 }
