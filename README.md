@@ -88,3 +88,10 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_key_here
 - [ ] Rating modal after delivery and after group buys
 - [ ] Payment gateway integration (real escrow)
 - [ ] Store partner portal (deals + order management)
+
+
+## Suggestion by sir
+
+- Make it like all shops comparison. 
+- Onboard shops on the platform, they will give their quotes on the raised demand by the community.
+- Don't restrict the explanation till college groups, make it a bit more open. (Like for a society).
